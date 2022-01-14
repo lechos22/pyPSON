@@ -6,7 +6,8 @@ setup(
     license='BSD 3-Clause License',
     description='module for parsing and dumping PSON',
     version='2.0.0',
-    package_dir={'pson': 'pson'},
+    url="https://github.com/lechos22/pyPSON",
+    package_dir={'': 'src'},
     packages=['pson'],
     # scripts=['pson/pson_prettify.py', 'pson/pson_to_json.py', 'pson/json_to_pson.py']
 )
