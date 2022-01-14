@@ -1,5 +1,4 @@
 import unittest
-from math import inf, nan
 from pson import *
 
 
@@ -21,6 +20,7 @@ class TestDumper(unittest.TestCase):
         self.assertEqual(Dumper.escape('\x00'), '\\x00')
 
     def test_dumps(self):
+        from math import inf, nan
         self.assertEqual(dumps(123), '123')
         self.assertEqual(dumps(3.14), '3.14')
         self.assertEqual(dumps(-2), '-2')
@@ -31,6 +31,10 @@ class TestDumper(unittest.TestCase):
         self.assertEqual(dumps(-inf), '-inf')
         self.assertEqual(dumps(nan), 'nan')
         self.assertEqual(dumps(None), 'null')
+        self.assertEqual(dumps([1, 2, 3, 4, 5]), '[1 2 3 4 5]')
+        self.assertEqual(dumps((1, 2, 3)), '[1 2 3]')
+        self.assertEqual(dumps({1, 2, 3}), '[1 2 3]')
+        self.assertEqual(dumps({'pi': 3.14, 'e': 2.72, 'phi': 1.62}), '(pi=3.14 e=2.72 phi=1.62)')
 
 
 if __name__ == '__main__':

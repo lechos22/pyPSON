@@ -1,11 +1,10 @@
-import math
-import re
 from typing import Any, Pattern, Iterator, Match
 
 Dumpable = None | float | int | str | dict | list | tuple | set
 
 
 class Lexer:
+    import re
     RE_ANY: Pattern[str] = re.compile(
         r'(-)'  # UN_MIN
         r'|(=)'  # EQ
@@ -24,10 +23,12 @@ class Lexer:
     )
 
     def __iter__(self) -> Iterator[tuple[str, Any]]:
+        import re
         self.re_iter: Iterator[Match[str]] = re.finditer(Lexer.RE_ANY, self.src)
         return self
 
     def __next__(self) -> tuple[str, Any]:
+        from math import nan, inf
         el: str = next(self.re_iter).group()
         if el == '-':
             return 'UN_MIN', None
@@ -44,9 +45,9 @@ class Lexer:
         elif el == 'null':
             return 'NUL', None
         elif el == 'inf':
-            return 'FP', math.inf
+            return 'FP', inf
         elif el == 'nan':
-            return 'FP', math.nan
+            return 'FP', nan
         elif el[0] == '"':
             return 'STR', el[1:-1]
         elif el.startswith('0b'):
@@ -131,7 +132,7 @@ class Dumper:
         elif t in (list, tuple, set):
             return f'[{" ".join([Dumper.dumps(i) for i in o])}]'
         elif t is dict:
-            return f'({" ".join([k + "=" + Dumper.dumps(v) for k, v in o.values()])})'
+            return f'({" ".join([k + "=" + Dumper.dumps(v) for k, v in o.items()])})'
 
 
 def loads(s: str) -> Any:
