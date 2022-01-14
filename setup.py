@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='py_PSON',
+    name='pyPSON',
     author='lechos22',
     license='BSD 3-Clause License',
     description='module for parsing and dumping PSON',
