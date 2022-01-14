@@ -141,5 +141,4 @@ def loads(s: str) -> Any:
     return yy.result
 
 
-def dumps(o: Dumpable) -> str:
-    return Dumper.dumps(o)
+dumps: type(Dumper.dumps) = Dumper.dumps
