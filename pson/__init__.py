@@ -2,6 +2,8 @@ import math
 import re
 from typing import Any, Pattern, Iterator, Match
 
+Dumpable = None | float | int | str | dict | list | tuple | set
+
 
 class Lexer:
     RE_ANY: Pattern[str] = re.compile(
@@ -108,12 +110,28 @@ class Parser:
             self.buf.append((t, v))
             while self.reduce():
                 pass
-        self.result: Any = self.buf[0][1] if self.buf else None
+        self.result: Dumpable = self.buf[0][1] if self.buf else None
         del self.buf
 
 
 class Dumper:
-    ...
+    @staticmethod
+    def escape(s: str) -> str:
+        return s.encode('unicode-escape').decode()
+
+    @staticmethod
+    def dumps(o: Dumpable) -> str:
+        t = type(o)
+        if o is None:
+            return 'null'
+        elif t in (float, int):
+            return str(o)
+        elif t is str:
+            return f'"{Dumper.escape(o)}"'
+        elif t in (list, tuple, set):
+            return f'[{" ".join([Dumper.dumps(i) for i in o])}]'
+        elif t is dict:
+            return f'({" ".join([k + "=" + Dumper.dumps(v) for k, v in o.values()])})'
 
 
 def loads(s: str) -> Any:
@@ -122,5 +140,5 @@ def loads(s: str) -> Any:
     return yy.result
 
 
-def dumps():
-    pass
+def dumps(o: Dumpable) -> str:
+    return Dumper.dumps(o)
